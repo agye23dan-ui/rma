@@ -1,6 +1,6 @@
 :root{--bg:#E8EBEE;--card:#fff;--ink:#1B2430;--mute:#5A6675;--hz:#F2B705;--red:#C93A0E;--ok:#1F7A45;--line:#CBD2D9;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161C24;--card:#212A35;--ink:#EEF1F4;--mute:#9AA6B4;--line:#33404E;--red:#FF7A4D;--ok:#4CC27F}}
-*{box-sizing:border-box}html,body{margin:0}
+*{box-sizing:border-box}html,body{margin:0}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{overflow-x:hidden}.card,.mt,button{overflow-wrap:anywhere}
 body{background:var(--bg);color:var(--ink);font:17px/1.55 Barlow,Arial,sans-serif}
 h1,h2,h3{font-family:'Barlow Condensed','Arial Narrow',sans-serif;margin:0;line-height:1.1}
 header{background:repeating-linear-gradient(-45deg,var(--hz) 0 18px,#1B2430 18px 36px);padding:10px 0}
@@ -35,10 +35,11 @@ main{padding-bottom:100px}
 .mod{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 10px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);min-height:68px}
 .ico{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--hz);font-size:22px;flex:none}
 .mt{flex:1;display:flex;flex-direction:column;text-align:left}.mt b{font-size:20px;line-height:1.1}.mt small{color:var(--mute);font:400 14px Barlow,Arial,sans-serif}
-.ring{flex:none}.ring text{font:700 12px Barlow,Arial,sans-serif;fill:var(--ink)}
+svg.ring{flex:none;width:44px;height:44px;margin:0;border:0;background:none;border-radius:0}.hero svg.ring{width:84px;height:84px}.ring text{font:700 12px Barlow,Arial,sans-serif;fill:var(--ink)}
 .mh{display:flex;align-items:center;gap:12px;margin:14px 0 8px}.mh h2{flex:1;font-size:26px}
 .bar{height:8px;background:var(--line);border-radius:6px;margin:0 0 12px;overflow:hidden}.bar i{display:block;height:100%;background:var(--hz);transition:width .3s}
 .o{min-height:52px}
 #app>*{animation:in .25s ease both}
 @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){#app>*{animation:none}.bar i{transition:none}}
+@media(max-width:400px){body{font-size:16px}header h1{font-size:26px}header p{font-size:13px}main{padding:12px 12px 100px}.hero{flex-direction:column;align-items:flex-start;gap:8px}.mod{padding:10px 12px}.mt b{font-size:18px}}
