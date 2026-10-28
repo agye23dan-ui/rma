@@ -67,3 +67,21 @@ ul.plain{list-style:none;padding:0}ul.plain li{display:flex;justify-content:spac
 .timer{position:sticky;top:0;background:var(--bg);padding:6px 0;margin:0;z-index:4;font-weight:600}
 a{color:inherit;font-weight:600}
 @media(forced-colors:active){button.on,button.pri{border-width:3px}}
+
+figure.fig{margin:0 0 14px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 8px 10px}
+figure.fig svg{border:0;margin:0;background:none;border-radius:0;display:block}
+figure.fig figcaption{font-size:14px;color:var(--mute);padding:6px 6px 0}
+figure.fig figcaption b{color:var(--ink)}
+.f-line{stroke:var(--ink);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.f-thin{stroke:var(--ink);stroke-width:1;fill:none}
+.f-hz{fill:#F2B705;stroke:#1B2430;stroke-width:2}
+.f-red{stroke:#C93A0E;stroke-width:3;fill:none;stroke-linecap:round}
+.f-redf{fill:#C93A0E}
+.f-ok{stroke:#1F7A45;stroke-width:3;fill:none;stroke-linecap:round}
+.f-okf{fill:#1F7A45}
+.f-fill{fill:var(--card);stroke:var(--ink);stroke-width:2}
+.f-gray{fill:#9AA6B4;stroke:var(--ink);stroke-width:2}
+.f-road{fill:#5A6675}
+.f-ink{fill:var(--ink)}
+.f-blue{fill:#1F5FAE}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .f-line,:root:not([data-theme=light]) .f-fill,:root:not([data-theme=light]) .f-gray{stroke:#EEF1F4}.f-road{fill:#3A4654}}

@@ -1,7 +1,7 @@
 // Content check: node check.js
 const fs=require('fs'),vm=require('vm');
 const ctx={window:{}};ctx.window=ctx;vm.createContext(ctx);
-['content.js','std.js',...fs.readdirSync('.').filter(f=>/^m\d+\.js$/.test(f)).sort()].forEach(f=>vm.runInContext(fs.readFileSync(f,'utf8').replace(/^const (\w+)=/gm,'var $1='),ctx,{filename:f}));
+['content.js','fig.js','std.js',...fs.readdirSync('.').filter(f=>/^m\d+\.js$/.test(f)).sort()].forEach(f=>vm.runInContext(fs.readFileSync(f,'utf8').replace(/^const (\w+)=/gm,'var $1='),ctx,{filename:f}));
 const M=ctx.M,ENH=ctx.ENH;let bad=0;const err=m=>{bad++;console.log('ERR',m)};
 Object.keys(ENH).forEach(i=>{const m=Object.assign({},M[i],ENH[i]);const pos=[0,0,0,0];
  if(!ENH[i].q){return}

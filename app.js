@@ -48,7 +48,7 @@ function open(i){const m=M[i];
 const best=sc[i]!=null?`<p class="mute">Best score: ${sc[i]}%. Pass mark ${PASS}%.</p>`:'';
 view(`<div class="row"><button id="bk">Back to modules</button><button id="pn">Print notes</button></div><div class="mh"><span class="ico" aria-hidden="true">${IC[i]||''}</span><h2>${esc(nm(m.t))}</h2>${ring(sc[i]||0)}</div>
 ${m.o?`<div class="card out"><h3>By the end of this module you can</h3><ul>${m.o.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
-${m.s||''}<div class="card"><ul>${m.n.map(x=>`<li>${x}</li>`).join('')}</ul></div>${(m.d||[]).map(x=>`<h3 class="sec">${x[0]}</h3><div class="card"><ul>${x[1].map(y=>`<li>${y}</li>`).join('')}</ul></div>`).join('')}
+${m.s||''}<div class="card"><ul>${m.n.map(x=>`<li>${x}</li>`).join('')}</ul></div>${(m.g||[]).join('')}${(m.d||[]).map(x=>`<h3 class="sec">${x[0]}</h3><div class="card"><ul>${x[1].map(y=>`<li>${y}</li>`).join('')}</ul></div>`).join('')}
 ${m.r?`<p class="mute ref">Aligned to: ${m.r.map(esc).join('; ')}.</p>`:''}${best}<div id="qz"><button class="pri" id="st">Take module test (${m.q.length} questions)</button></div>`,nm(m.t));
 document.getElementById('bk').onclick=home;document.getElementById('pn').onclick=()=>window.print();
 document.getElementById('st').onclick=()=>quiz(document.getElementById('qz'),m.q,{retry:()=>open(i),done:(p)=>{sc[i]=Math.max(sc[i]||0,p);rec(i,p)}})}
@@ -123,7 +123,7 @@ document.getElementById('nm').oninput=e=>{sc.name=e.target.value.slice(0,80);sav
 document.getElementById('pr').onclick=()=>window.print();document.getElementById('bk2').onclick=home}
 
 function allNotes(){tab(tl);
-view('<div class="row"><button id="bk3">Back</button><button class="pri" id="pa">Print all notes</button></div>'+M.map(m=>`<h2 class="sec">${m.t}</h2>${m.o?`<div class="card"><b>Outcomes</b><ul>${m.o.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}${m.s||''}<div class="card"><ul>${m.n.map(x=>`<li>${x}</li>`).join('')}</ul></div>${(m.d||[]).map(x=>`<h3>${x[0]}</h3><ul>${x[1].map(y=>`<li>${y}</li>`).join('')}</ul>`).join('')}`).join(''),'All notes');
+view('<div class="row"><button id="bk3">Back</button><button class="pri" id="pa">Print all notes</button></div>'+M.map(m=>`<h2 class="sec">${m.t}</h2>${m.o?`<div class="card"><b>Outcomes</b><ul>${m.o.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}${m.s||''}<div class="card"><ul>${m.n.map(x=>`<li>${x}</li>`).join('')}</ul></div>${(m.g||[]).join('')}${(m.d||[]).map(x=>`<h3>${x[0]}</h3><ul>${x[1].map(y=>`<li>${y}</li>`).join('')}</ul>`).join('')}`).join(''),'All notes');
 document.getElementById('bk3').onclick=home;document.getElementById('pa').onclick=()=>window.print()}
 
 tl.onclick=home;te.onclick=exam;tp.onclick=prac;tg.onclick=gloss;home();
