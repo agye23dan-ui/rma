@@ -1,4 +1,4 @@
-const V='rma-v11',FILES=['./','index.html','styles.css','content.js','std.js','m01.js','app.js','manifest.json','icon-192.png','icon-512.png'];
+const V='rma-v12',FILES=['./','index.html','styles.css','content.js','std.js','m01.js','m02.js','app.js','manifest.json','icon-192.png','icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:'reload'})))));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))));self.clients.claim()});
 self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;
