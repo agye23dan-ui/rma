@@ -1,0 +1,40 @@
+// App logic: navigation, quizzes, exam, progress, service worker
+const app=document.getElementById('app'),tl=document.getElementById('tl'),te=document.getElementById('te'),tp=document.getElementById('tp'),tg=document.getElementById('tg');
+const tab=b=>[tl,tp,tg,te].forEach(x=>x.className=x===b?'on':'');
+const IC=["\u{1F9BA}","\u{1F9F0}","\u{1F50D}","\u{1F50B}","\u{1F69B}","\u26D3\uFE0F","\u{1F3DE}\uFE0F","\u{1F6A7}","\u{1F3D7}\uFE0F","\u{1F6A6}","\u{1F4CB}","\u{1F4BC}"];
+const ring=(p,z=44)=>{const r=18,c=2*Math.PI*r;return `<svg class="ring" width="${z}" height="${z}" viewBox="0 0 44 44" role="img" aria-label="${p}%"><circle cx="22" cy="22" r="${r}" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="22" cy="22" r="${r}" fill="none" stroke="${p>=70?'var(--ok)':'var(--hz)'}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-p/100)}" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle">${p}</text></svg>`};
+const nm=t=>t.replace(/^\d+\.\s*/,'');
+function prac(){tab(tp);sc.p=sc.p||{};let h='<p class="mute">Tick each step as you practise it. Progress is saved.</p>';
+P.forEach((x,i)=>{h+=`<h2 class="sec">${x[0]}</h2><div class="card">`+x[1].map((s,j)=>`<label style="display:flex;gap:10px;margin:0 0 8px"><input type="checkbox" data-k="${i}-${j}" ${sc.p[i+'-'+j]?'checked':''}> ${s}</label>`).join('')+'</div>'});
+app.innerHTML=h;app.querySelectorAll('input').forEach(c=>c.onchange=()=>{sc.p[c.dataset.k]=c.checked;save()})}
+function gloss(){tab(tg);app.innerHTML='<input id="gs" type="search" placeholder="Search terms" aria-label="Search terms" style="width:100%;padding:10px;font:inherit;border:2px solid var(--ink);border-radius:6px;background:var(--card);color:var(--ink);margin:0 0 12px"><div id="gl"></div>';
+const f=()=>{const v=document.getElementById('gs').value.toLowerCase();document.getElementById('gl').innerHTML=G.filter(g=>(g[0]+g[1]).toLowerCase().includes(v)).map(g=>`<div class="card"><b>${g[0]}</b><br>${g[1]}</div>`).join('')||'<p class="mute">No match. Try another word.</p>'};document.getElementById('gs').oninput=f;f()}
+let sc={};try{sc=JSON.parse(localStorage.getItem('rma')||'{}')}catch(e){}
+const save=()=>{try{localStorage.setItem('rma',JSON.stringify(sc))}catch(e){}};
+const shuf=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+function home(){tab(tl);
+const ps=M.filter((m,i)=>sc[i]>=70).length,pct=Math.round(ps/M.length*100),nx=M.findIndex((m,i)=>!(sc[i]>=70));
+app.innerHTML=`<div class="hero card"><div>${ring(pct,84)}</div><div><h2>${ps} of ${M.length} modules passed</h2><p class="mute">Exam best: ${sc.exam!=null?sc.exam+'%':'not taken'}. Pass mark 70%.</p>${nx>=0?`<button class="pri" id="cont">Continue: ${nm(M[nx].t)}</button>`:'<p><b>All modules passed. Take the final exam.</b></p>'}</div></div>`+M.map((m,i)=>`<button class="mod" data-i="${i}"><span class="ico">${IC[i]||'\u{1F4D8}'}</span><span class="mt"><b>${nm(m.t)}</b><small>Module ${i+1} \u00B7 ${m.q.length} questions</small></span>${ring(sc[i]||0)}</button>`).join('');
+app.querySelectorAll('.mod').forEach(b=>b.onclick=()=>open(+b.dataset.i));
+const ct=document.getElementById('cont');if(ct)ct.onclick=()=>open(nx);
+const rb=document.createElement('button');rb.textContent='Reset progress';rb.style.marginTop='12px';rb.onclick=()=>{if(rb.dataset.c){sc={};save();home()}else{rb.dataset.c=1;rb.textContent='Tap again to clear all scores and ticks'}};app.appendChild(rb);
+const pa=document.createElement('button');pa.textContent='Print all notes';pa.style.cssText='margin:12px 0 0 8px';pa.onclick=allNotes;app.appendChild(pa);
+if(sc.exam>=70){const cb=document.createElement('button');cb.className='pri';cb.textContent='View certificate';cb.style.cssText='margin:12px 0 0 8px';cb.onclick=cert;app.appendChild(cb)}}
+function open(i){const m=M[i];
+app.innerHTML=`<button id="bk">Back to modules</button> <button id="pn">Print notes</button><div class="mh"><span class="ico">${IC[i]||''}</span><h2>${nm(m.t)}</h2>${ring(sc[i]||0)}</div>${m.s||''}<div class="card"><ul>${m.n.map(x=>`<li>${x}</li>`).join('')}</ul></div>${(m.d||[]).map(x=>`<h3 class="sec">${x[0]}</h3><div class="card"><ul>${x[1].map(y=>`<li>${y}</li>`).join('')}</ul></div>`).join('')}<div id="qz"></div>`;
+document.getElementById('bk').onclick=home;document.getElementById('pn').onclick=()=>window.print();
+document.getElementById('qz').innerHTML='<button class="pri" id="st">Take module test</button>';
+document.getElementById('st').onclick=()=>quiz(document.getElementById('qz'),m.q,p=>{sc[i]=Math.max(sc[i]||0,p);save()})}
+function quiz(el,qs,done){let k=0,r=0,w=[];
+(function show(){if(k>=qs.length){const p=Math.round(r/qs.length*100);done&&done(p);el.innerHTML=`<div class="card ${p>=70?'':'warn'}"><h3>${p>=70?'Passed':'Not yet'}: ${p}%</h3><p>${r} of ${qs.length} correct. ${p>=70?'Good work.':'Review the notes and try again.'}</p></div>`+(w.length?'<h3 class="sec">Review these</h3>':'')+w.map(q=>`<div class="card warn"><b>${q[0]}</b><br>Answer: ${q[1][q[2]]}</div>`).join('');return}
+const q=qs[k];el.innerHTML=`<div class="bar"><i style="width:${Math.round(k/qs.length*100)}%"></i></div><div class="card"><p class="mute">Question ${k+1} of ${qs.length}</p><h3>${q[0]}</h3></div>`+q[1].map((o,j)=>`<button class="o" data-j="${j}">${o}</button>`).join('');
+el.querySelectorAll('.o').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;if(j===q[2])r++;else w.push(q);
+el.querySelectorAll('.o').forEach((x,y)=>{x.disabled=true;if(y===q[2])x.classList.add('good');else if(y===j)x.classList.add('bad')});
+const n=document.createElement('button');n.className='pri';n.textContent=k+1<qs.length?'Next question':'See result';n.onclick=()=>{k++;show()};el.appendChild(n)})})()}
+function exam(){tab(te);
+const all=M.flatMap(m=>m.q);app.innerHTML=`<h2 class="sec">Final exam</h2><p class="mute">${Math.min(40,all.length)} random questions from every module. Pass mark 70%.</p><div id="ex"><button class="pri" id="go">Start exam</button></div>`;
+document.getElementById('go').onclick=()=>{const ex=document.getElementById('ex');let t=2400;const c=document.createElement('p');c.className='mute';ex.before(c);const iv=setInterval(()=>{t--;c.textContent='Time left: '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0');if(!document.body.contains(c))clearInterval(iv);else if(t<=0){clearInterval(iv);ex.innerHTML='<div class="card warn"><h3>Time is up</h3><p>Start again when you are ready.</p></div>'}},1000);quiz(ex,shuf(all).slice(0,40),p=>{clearInterval(iv);sc.exam=Math.max(sc.exam||0,p);save()})}}
+tl.onclick=home;te.onclick=exam;tp.onclick=prac;tg.onclick=gloss;home();
+function cert(){tab(tl);app.innerHTML=`<div id="cert" class="card" style="text-align:center;border:4px double var(--ink);padding:28px 16px"><h2 style="font-size:32px">Certificate of Completion</h2><p>This certifies that</p><input id="nm" placeholder="Type your name" aria-label="Your name" style="font:600 26px 'Barlow Condensed',Arial,sans-serif;text-align:center;width:100%;border:0;border-bottom:2px solid var(--ink);background:transparent;color:var(--ink)"><p>has completed the Recovery Mechanic Academy course and passed the final exam with <b>${sc.exam}%</b>.</p><p class="mute">${new Date().toLocaleDateString()}</p></div><button class="pri" id="pr">Print or save as PDF</button> <button id="bk2">Back</button>`;document.getElementById('pr').onclick=()=>window.print();document.getElementById('bk2').onclick=home}
+function allNotes(){tab(tl);app.innerHTML='<button id="bk3">Back</button> <button class="pri" id="pa">Print all notes</button>'+M.map(m=>`<h2 class="sec">${m.t}</h2>${m.s||''}<div class="card"><ul>${m.n.map(x=>`<li>${x}</li>`).join('')}</ul></div>${(m.d||[]).map(x=>`<h3>${x[0]}</h3><ul>${x[1].map(y=>`<li>${y}</li>`).join('')}</ul>`).join('')}`).join('');document.getElementById('bk3').onclick=home;document.getElementById('pa').onclick=()=>window.print()}
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
